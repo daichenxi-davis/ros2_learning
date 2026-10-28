@@ -19,7 +19,11 @@ private:
 public:
 	SubscriberNode():Node("receive_subscriber")
 	{
-		subscriber_=this->create_subscription<std_msgs::msg::String>("chatter",100,[this](const std_msgs::msg::String::SharedPtr msg){this->callback(msg);});
+		rclcpp::QoS qos(100);
+		qos.reliability(rclcpp::ReliabilityPolicy::Reliable);
+		qos.durability(rclcpp::DurabilityPolicy::Volatile);
+		qos.history(rclcpp::HistoryPolicy::KeepLast);
+		subscriber_=this->create_subscription<std_msgs::msg::String>("chatter",qos,[this](const std_msgs::msg::String::SharedPtr msg){this->callback(msg);});
 	}
 };
 

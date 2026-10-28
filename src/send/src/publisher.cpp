@@ -17,14 +17,21 @@ private:
 	void callback()
 	{
 		auto msg=std_msgs::msg::String();
-		msg.data="Hello, count:"+std::to_string(count++);
+		msg.data=this->get_parameter("prefix").as_string()+std::to_string(count++);
 		RCLCPP_INFO(this->get_logger(),"Publishing: %s",msg.data.c_str());
 		publisher_->publish(msg);
 	}
 public:
-	PublisherNode():Node("send_publisher"),count(0)
+	PublisherNode():Node("send_publisher")
 	{
-		publisher_=this->create_publisher<std_msgs::msg::String>("chatter",100);
+		this->declare_parameter("prefix","Hello, count: ");
+		this->declare_parameter("start",0);
+		count=this->get_parameter("start").as_int();
+		rclcpp::QoS qos(100);
+		qos.reliability(rclcpp::ReliabilityPolicy::Reliable);
+		qos.durability(rclcpp::DurabilityPolicy::Volatile);
+		qos.history(rclcpp::HistoryPolicy::KeepLast);
+		publisher_=this->create_publisher<std_msgs::msg::String>("chatter",qos);
 		timer_=this->create_wall_timer(500ms,[this](){this->callback();});
 	}
 };
