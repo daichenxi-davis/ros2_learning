@@ -10,3 +10,7 @@ ros2 launch bringup start.launch.py
 ```
 
 使用params.yaml配置my_publisher节点
+```
+# modify the prefix in real time
+ros2 param set my_publisher prefix <msg_prefix>
+```
