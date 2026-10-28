@@ -8,3 +8,5 @@ source install/setup.bash
 # 3. Launch all nodes
 ros2 launch bringup start.launch.py
 ```
+
+使用params.yaml配置my_publisher节点
