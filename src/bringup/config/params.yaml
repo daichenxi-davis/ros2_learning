@@ -1,4 +1,4 @@
 my_publisher:
   ros__parameters:
-    prefix: "Hello, count: "
     start: 0
+    

@@ -4,17 +4,18 @@
 
 #include "rclcpp/rclcpp.hpp"
 #include "std_msgs/msg/string.hpp"
+#include "geometry_msgs/msg/pose_stamped.hpp"
 
 using namespace std::chrono_literals;
 
 class SubscriberNode: public rclcpp::Node
 {
 private:
-	rclcpp::Subscription<std_msgs::msg::String>::SharedPtr subscriber_;
+	rclcpp::Subscription<geometry_msgs::msg::PoseStamped>::SharedPtr subscriber_;
 
-	void callback(std_msgs::msg::String::SharedPtr msg)
+	void callback(geometry_msgs::msg::PoseStamped::SharedPtr msg)
 	{
-		RCLCPP_INFO(this->get_logger(),"Received: %s",msg->data.c_str());
+		RCLCPP_INFO(this->get_logger(),"Received: position(%.2f,%.2f,%.2f)",msg->pose.position.x,msg->pose.position.y,msg->pose.position.z);
 	}
 public:
 	SubscriberNode():Node("receive_subscriber")
@@ -23,7 +24,7 @@ public:
 		qos.reliability(rclcpp::ReliabilityPolicy::Reliable);
 		qos.durability(rclcpp::DurabilityPolicy::Volatile);
 		qos.history(rclcpp::HistoryPolicy::KeepLast);
-		subscriber_=this->create_subscription<std_msgs::msg::String>("chatter",qos,[this](const std_msgs::msg::String::SharedPtr msg){this->callback(msg);});
+		subscriber_=this->create_subscription<geometry_msgs::msg::PoseStamped>("chatter",qos,[this](const geometry_msgs::msg::PoseStamped::SharedPtr msg){this->callback(msg);});
 	}
 };
 

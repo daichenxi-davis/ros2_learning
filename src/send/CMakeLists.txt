@@ -9,6 +9,12 @@ endif()
 find_package(ament_cmake REQUIRED)
 find_package(rclcpp REQUIRED)
 find_package(std_msgs REQUIRED)
+find_package(geometry_msgs REQUIRED)
+
+add_executable(publisher src/publisher.cpp)
+target_link_libraries(publisher rclcpp::rclcpp std_msgs::std_msgs geometry_msgs::geometry_msgs)
+
+install(TARGETS publisher DESTINATION lib/${PROJECT_NAME})
 
 if(BUILD_TESTING)
   find_package(ament_lint_auto REQUIRED)
@@ -21,10 +27,5 @@ if(BUILD_TESTING)
   set(ament_cmake_cpplint_FOUND TRUE)
   ament_lint_auto_find_test_dependencies()
 endif()
-
-add_executable(publisher src/publisher.cpp)
-target_link_libraries(publisher rclcpp::rclcpp std_msgs::std_msgs)
-
-install(TARGETS publisher DESTINATION lib/${PROJECT_NAME})
 
 ament_package()
